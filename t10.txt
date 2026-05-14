@@ -1,0 +1,126 @@
+
+MainActivity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student Registration"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Name"
+        android:layout_below="@id/txtTitle"
+        android:layout_marginTop="30dp"/>
+
+    <Spinner
+        android:id="@+id/spDepartment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etName"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_below="@id/spDepartment"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"/>
+
+</RelativeLayout>
+
+
+kt file 
+package com.example.labtest
+
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.Toast
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var etName: EditText
+    private lateinit var spDepartment: Spinner
+    private lateinit var btnSubmit: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        etName = findViewById(R.id.etName)
+        spDepartment = findViewById(R.id.spDepartment)
+        btnSubmit = findViewById(R.id.btnSubmit)
+
+        // Spinner Data
+        val departments = arrayOf(
+            "Select Department",
+            "CSE",
+            "ISE",
+            "ECE",
+            "MECH"
+        )
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            departments
+        )
+
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+
+        spDepartment.adapter = adapter
+
+        btnSubmit.setOnClickListener(View.OnClickListener {
+
+            val name = etName.text.toString().trim()
+            val department = spDepartment.selectedItem.toString()
+
+            // Validation
+            if (name.isEmpty()) {
+
+                etName.error = "Name is required"
+                etName.requestFocus()
+
+            } else if (department == "Select Department") {
+
+                Toast.makeText(
+                    this,
+                    "Please select department",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else {
+
+                val message =
+                    "Name: $name\nDepartment: $department"
+
+                Toast.makeText(
+                    this,
+                    message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
+    }
+}
